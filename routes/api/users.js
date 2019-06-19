@@ -3,6 +3,8 @@ const router = express.Router();
 const User = require("../../models/User");
 const gravatar = require("gravatar");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const keys = require("../../config/default.json");
 
 //@route   GET /api/users
 //@desc    Test Users
@@ -68,7 +70,7 @@ router.get("/all", (req, res) => {
 });
 
 //@route   GET /api/users/login
-//@desc    Login Users w=using JWT
+//@desc    Login Users using JWT
 //@access  Public
 
 router.post("/login", (req, res) => {
@@ -83,7 +85,17 @@ router.post("/login", (req, res) => {
       .compare(password, user.password)
       .then(isMatch => {
         if (isMatch) {
-          res.json({ msg: "Success" });
+          //User Is Matched
+          let payload = { name: user.name, id: user.id, avatar: user.avatar };
+
+          jwt.sign(
+            payload,
+            keys.jwtLoginSecret,
+            { expiresIn: 3600 },
+            (err, token) => {
+              res.json({ msg: "Success", token: token });
+            }
+          );
         } else {
           res.status(400).json({ msg: "Invalid Password" });
         }
