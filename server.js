@@ -7,7 +7,7 @@ const profile = require("./routes/api/profile");
 const auth = require("./routes/api/auth");
 const post = require("./routes/api/posts");
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 const app = express();
 //Body parser middleware

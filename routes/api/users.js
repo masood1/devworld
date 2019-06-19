@@ -67,4 +67,31 @@ router.get("/all", (req, res) => {
     });
 });
 
+//@route   GET /api/users/login
+//@desc    Login Users w=using JWT
+//@access  Public
+
+router.post("/login", (req, res) => {
+  let email = req.body.email;
+  let password = req.body.password;
+
+  User.findOne({ email }).then(user => {
+    if (!user) {
+      res.status(404).json({ msg: "User Not Found" });
+    }
+    bcrypt
+      .compare(password, user.password)
+      .then(isMatch => {
+        if (isMatch) {
+          res.json({ msg: "Success" });
+        } else {
+          res.status(400).json({ msg: "Invalid Password" });
+        }
+      })
+      .catch(err => {
+        console.log("error in copare bcrypt " + err);
+      });
+  });
+});
+
 module.exports = router;
