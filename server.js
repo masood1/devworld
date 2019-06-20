@@ -1,6 +1,7 @@
 const express = require("express");
 const connectDb = require("./config/db");
 const bodyparser = require("body-parser");
+const passport = require("passport");
 
 const users = require("./routes/api/users");
 const profile = require("./routes/api/profile");
@@ -17,7 +18,11 @@ app.use(bodyparser.json());
 //connect databse
 connectDb();
 
-app.get("/", (req, res) => res.send("API running"));
+// Passport middleware
+app.use(passport.initialize());
+
+// Passport Config
+require("./config/passsport")(passport);
 
 //Define Routes
 app.use("/api/users", users);
